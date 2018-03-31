@@ -11,17 +11,18 @@
 4.  To follow UEFI 2.7, the variable driver is updated to do more check and expose  an issue in `ShellPkg DmpStore.c`. Then the `DmpStore` command in old the SHELL will not work. The New UEFI SHELL binary or source needs to be used.
 
 5.  The code to provide `TFTP` and `DP` shell commands is moved from ShellPkg/Library directory to ShellPkg/DynamicCommand directory.  Platforms which use Shell source code needs to:
- a. Remove below two libraries' INF files reference from platform DSC file;   
+
+   a. Remove below two libraries' INF files reference from platform DSC file;   
 ```
         NULL|ShellPkg/Library/UefiShellTftpCommandLib/UefiShellTftpCommandLib.inf,
         NULL|ShellPkg/Library/UefiDpLib/UefiDpLib.inf
 ```
- b. Add dynamic commands for the two shell commands in DSC and FDF files;
+    b. Add dynamic commands for the two shell commands in DSC and FDF files;
 ```
       ShellPkg/DynamicCommand/TftpDynamicCommand/TftpDynamicCommand.inf
       ShellPkg/DynamicCommand/DpDynamicCommand/DpDynamicCommand.inf 
 ```
- c. Set gEfiShellPkgTokenSpaceGuid.PcdShellLibAutoInitialize as FALSE for Shell.inf and these two command INF in platform DSC.
+    c. Set` gEfiShellPkgTokenSpaceGuid.PcdShellLibAutoInitialize` as FALSE for Shell.inf and these two command INF in platform DSC.
 
 6. The `SmbiosMeasurement` has been updated to skip measurement for OEM type. Platform code should measure OEM type by itself if required.
 
