@@ -1,53 +1,32 @@
 # UDK2018 Core Update Notes
-1.  GCC tool chain adds `--whole-archive` link option to detect the duplicated
-    function or variable name. If the source code has such issue, the code
-    needs to be fixed first. Or, platform can set link option to disable this
-    checker in DSC file like below:<br>
+1.  The GCC tool chain adds `--whole-archive` link option to detect the duplicated     function or variable name. If the source code has this issue, the code  will need to be fixed first, or the  platform can set a link option to disable this checker in the platform's DSC file as shown below:
+```
+    [BuildOptions]
+     GCC:*_*_*_DLINK_FLAGS = -Wl,--no-whole-archive
+```
+2.  The `MdePkg BaseLib` adds a new API `CalculateCrc32()` to calculate CRC32 value. If the source code has the same function name, it needs to be updated to use BaseLib one.
 
-    `[BuildOptions]`<br>
-    ` GCC:*_*_*_DLINK_FLAGS = -Wl,--no-whole-archive`
-
-2.  `MdePkg BaseLib` add new API `CalculateCrc32()` to calculate CRC32 value.
-    If the source code has the same function name, it needs to be updated
-    to use BaseLib one.
-
-3.  Define `GLOBAL_REMOVE_IF_UNREFERENCED` as empty in `Base.h` for VS2013 or above
-    compiler. If platform defines this MACRO as the different value, platform
-    needs to update their code to remove this macro definition, and use it
+3.  The Define `GLOBAL_REMOVE_IF_UNREFERENCED` as empty in `Base.h` for Visual Studio 2013* (VS2013) or earlier compiler. If the platform defines this MACRO as the different value, the platform will need to update their code to remove this macro definition, and use it
     from Base.h. If platform has the duplicated global variable name from the
     different libraries, it may be exposed by this change. Platform needs to
     update the code to avoid the duplicated global variable name.
 
-4.  To follow UEFI 2.7, variable driver is updated to do more check and expose
-    an issue in `ShellPkg DmpStore.c`. Then, `DmpStore` command in old SHELL will
-    not work. New SHELL binary or source needs to be used.
+4.  To follow UEFI 2.7, the variable driver is updated to do more check and expose  an issue in `ShellPkg DmpStore.c`. Then the `DmpStore` command in old the SHELL will not work. The New UEFI SHELL binary or source needs to be used.
 
-5.  The code to provide "TFTP" and "DP" shell commands is moved from
-    ShellPkg/Library directory to ShellPkg/DynamicCommand directory.
-    Platforms which use Shell source code needs to:
+5.  The code to provide TFTP and DP shell commands is moved from ShellPkg/Library directory to ShellPkg/DynamicCommand directory.  Platforms which use Shell source code needs to:
+    a. Remove below two libraries' INF files reference from platform DSC file;   
+      NULL|ShellPkg/Library/UefiShellTftpCommandLib/UefiShellTftpCommandLib.inf,
+      NULL|ShellPkg/Library/UefiDpLib/UefiDpLib.inf
+    b. Add dynamic commands for the two shell commands in DSC and FDF files;
+      ShellPkg/DynamicCommand/TftpDynamicCommand/TftpDynamicCommand.inf
+      ShellPkg/DynamicCommand/DpDynamicCommand/DpDynamicCommand.inf 
+    c. Set gEfiShellPkgTokenSpaceGuid.PcdShellLibAutoInitialize as FALSE for Shell.inf and these two command INF in platform DSC.
 
-    a. Remove below two libraries' INF files reference from platform DSC file;
+6.  `SmbiosMeasurement` has been updated to skip measurement for OEM type. Platform code should measure OEM type by itself if required.
 
-       `NULL|ShellPkg/Library/UefiShellTftpCommandLib/UefiShellTftpCommandLib.inf`,<br>
-       `NULL|ShellPkg/Library/UefiDpLib/UefiDpLib.inf`
-
-     b. Add dynamic commands for the two shell commands in DSC and FDF files;
-
-       `ShellPkg/DynamicCommand/TftpDynamicCommand/TftpDynamicCommand.inf` <br>
-       `ShellPkg/DynamicCommand/DpDynamicCommand/DpDynamicCommand.inf`
-
-
-     c. Set `gEfiShellPkgTokenSpaceGuid.PcdShellLibAutoInitialize` as `FALSE`
-       for Shell.inf and these two command INF in platform DSC.
-
-6.  `SmbiosMeasurement` has been updated to skip measurement for OEM type.
-    Platform code should measure OEM type by itself if required.
-
-7.  Microcode update module has been moved from `UefiCpuPkg` to `IntelSiliconPkg`.
-    Platform needs to update MicrocodeUpdate INF path in DSC/FDF like below.<br>
-   ` UefiCpuPkg/Feature/Capsule/MicrocodeUpdateDxe/MicrocodeUpdateDxe.inf`
-    `->`
-    `IntelSiliconPkg/Feature/Capsule/MicrocodeUpdateDxe/MicrocodeUpdateDxe.inf`
+7.  Microcode update module has been moved from `UefiCpuPkg` to `IntelSiliconPkg`.     Platform needs to update MicrocodeUpdate INF path in DSC/FDF like below.
+   UefiCpuPkg/Feature/Capsule/MicrocodeUpdateDxe/MicrocodeUpdateDxe.inf
+   \-\> IntelSiliconPkg/Feature/Capsule/MicrocodeUpdateDxe/MicrocodeUpdateDxe.inf
 
 8.  `PerformancePkg` is removed. Platform should use the "DP" command produced 
     by `ShellPkg/DynamicCommand/DpDynamicCommand. PcAtchipsetPkg/Library/`
