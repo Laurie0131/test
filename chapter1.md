@@ -4,36 +4,32 @@
     [BuildOptions]
      GCC:*_*_*_DLINK_FLAGS = -Wl,--no-whole-archive
 ```
-2.  The `MdePkg BaseLib` adds a new API `CalculateCrc32()` to calculate CRC32 value. If the source code has the same function name, it needs to be updated to use BaseLib one.
+2.  The `MdePkg BaseLib` adds a new API `CalculateCrc32()` to calculate CRC32 value. If the source code has the same function name, it will need to be updated to use BaseLib one.
 
-3.  The Define `GLOBAL_REMOVE_IF_UNREFERENCED` as empty in `Base.h` for Visual Studio 2013* (VS2013) or earlier compiler. If the platform defines this MACRO as the different value, the platform will need to update their code to remove this macro definition, and use it
-    from Base.h. If platform has the duplicated global variable name from the
-    different libraries, it may be exposed by this change. Platform needs to
-    update the code to avoid the duplicated global variable name.
+3.  The Define `GLOBAL_REMOVE_IF_UNREFERENCED` as empty in `Base.h` for Visual Studio 2013* (VS2013) or earlier compiler. If the platform defines this MACRO as the different value, the platform will need to update their code to remove this macro definition, and use it from Base.h. If platform has the duplicated global variable name from the different libraries, it may be exposed by this change. Platform will need to  update the code to avoid the duplicated global variable name.
 
 4.  To follow UEFI 2.7, the variable driver is updated to do more check and expose  an issue in `ShellPkg DmpStore.c`. Then the `DmpStore` command in old the SHELL will not work. The New UEFI SHELL binary or source needs to be used.
 
-5.  The code to provide TFTP and DP shell commands is moved from ShellPkg/Library directory to ShellPkg/DynamicCommand directory.  Platforms which use Shell source code needs to:
-    a. Remove below two libraries' INF files reference from platform DSC file;   
-      NULL|ShellPkg/Library/UefiShellTftpCommandLib/UefiShellTftpCommandLib.inf,
-      NULL|ShellPkg/Library/UefiDpLib/UefiDpLib.inf
-    b. Add dynamic commands for the two shell commands in DSC and FDF files;
+5.  The code to provide `TFTP` and `DP` shell commands is moved from ShellPkg/Library directory to ShellPkg/DynamicCommand directory.  Platforms which use Shell source code needs to:
+ a. Remove below two libraries' INF files reference from platform DSC file;   
+```
+        NULL|ShellPkg/Library/UefiShellTftpCommandLib/UefiShellTftpCommandLib.inf,
+        NULL|ShellPkg/Library/UefiDpLib/UefiDpLib.inf
+```
+ b. Add dynamic commands for the two shell commands in DSC and FDF files;
+```
       ShellPkg/DynamicCommand/TftpDynamicCommand/TftpDynamicCommand.inf
       ShellPkg/DynamicCommand/DpDynamicCommand/DpDynamicCommand.inf 
-    c. Set gEfiShellPkgTokenSpaceGuid.PcdShellLibAutoInitialize as FALSE for Shell.inf and these two command INF in platform DSC.
+```
+ c. Set gEfiShellPkgTokenSpaceGuid.PcdShellLibAutoInitialize as FALSE for Shell.inf and these two command INF in platform DSC.
 
-6.  `SmbiosMeasurement` has been updated to skip measurement for OEM type. Platform code should measure OEM type by itself if required.
+6. The `SmbiosMeasurement` has been updated to skip measurement for OEM type. Platform code should measure OEM type by itself if required.
 
-7.  Microcode update module has been moved from `UefiCpuPkg` to `IntelSiliconPkg`.     Platform needs to update MicrocodeUpdate INF path in DSC/FDF like below.
-   UefiCpuPkg/Feature/Capsule/MicrocodeUpdateDxe/MicrocodeUpdateDxe.inf
-   \-\> IntelSiliconPkg/Feature/Capsule/MicrocodeUpdateDxe/MicrocodeUpdateDxe.inf
+7.  Microcode update module has been moved from `UefiCpuPkg` to `IntelSiliconPkg`.     The Platform needs to update MicrocodeUpdate INF path in DSC/FDF like below. UefiCpuPkg/Feature/Capsule/MicrocodeUpdateDxe/MicrocodeUpdateDxe.inf   \-\> IntelSiliconPkg/Feature/Capsule/MicrocodeUpdateDxe/MicrocodeUpdateDxe.inf
 
-8.  `PerformancePkg` is removed. Platform should use the "DP" command produced 
-    by `ShellPkg/DynamicCommand/DpDynamicCommand. PcAtchipsetPkg/Library/`
-    `AcpiTimerLib` is recommended to be used instead of `PerformancePkg/Library/`
-    `TscTimerLib`. If the `overrided TscTimerLib` is still used, the definitions in 
-    `PerformancePkg TscFrequency.h` and `GenericIch.h` need to be copied to 
-    platform package.
+8.  The PerformancePkg is removed. Platforms should use the `DP` command produced by the `ShellPkg/DynamicCommand/DpDynamicCommand`. 
+The `PcAtchipsetPkg/Library/AcpiTimerLib` is recommended to be used instead of the `PerformancePkg/Library/TscTimerLib`. 
+If the `overrided TscTimerLib` is still used, the definitions in `PerformancePkg TscFrequency.h` and `GenericIch.h` will need to be copied to the platform package.
 
 9.  A new interface is introduced to `CpuExceptionHandlerLib`.<br>
         It must be implemented for any existing instance of this library otherwise
