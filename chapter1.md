@@ -25,17 +25,15 @@
 
 6. The `SmbiosMeasurement` has been updated to skip measurement for OEM type. Platform code should measure OEM type by itself if required.
 
-7.  Microcode update module has been moved from `UefiCpuPkg` to `IntelSiliconPkg`.     The Platform needs to update MicrocodeUpdate INF path in DSC/FDF like below. UefiCpuPkg/Feature/Capsule/MicrocodeUpdateDxe/MicrocodeUpdateDxe.inf   \-\> IntelSiliconPkg/Feature/Capsule/MicrocodeUpdateDxe/MicrocodeUpdateDxe.inf
+7.  Microcode update module has been moved from `UefiCpuPkg` to `IntelSiliconPkg`.     The Platform needs to update the MicrocodeUpdate INF path in DSC/FDF as below. 
+<pre>
+   UefiCpuPkg/Feature/Capsule/MicrocodeUpdateDxe/MicrocodeUpdateDxe.inf  
+   -> IntelSiliconPkg/Feature/Capsule/MicrocodeUpdateDxe/MicrocodeUpdateDxe.inf
+</pre>
 
-8.  The PerformancePkg is removed. Platforms should use the `DP` command produced by the `ShellPkg/DynamicCommand/DpDynamicCommand`. 
-The `PcAtchipsetPkg/Library/AcpiTimerLib` is recommended to be used instead of the `PerformancePkg/Library/TscTimerLib`. 
-If the `overrided TscTimerLib` is still used, the definitions in `PerformancePkg TscFrequency.h` and `GenericIch.h` will need to be copied to the platform package.
+8.  The PerformancePkg is removed. Platforms should use the `DP` command produced by the `ShellPkg/DynamicCommand/DpDynamicCommand`.  The `PcAtchipsetPkg/Library/AcpiTimerLib` is recommended to be used instead of the `PerformancePkg/Library/TscTimerLib`.  If the overrided `TscTimerLib` is still used, the definitions in `PerformancePkg   TscFrequency.h` and `GenericIch.h` will need to be copied to the platform package.
 
-9.  A new interface is introduced to `CpuExceptionHandlerLib`.<br>
-        It must be implemented for any existing instance of this library otherwise
-    the build will fail. This method can just call original `InitializeCpuExceptionHandlers`
-    if there's no stack switch to setup for Stack Guard feature.
-
+9.  A new interface is introduced to `CpuExceptionHandlerLib`. It must be implemented for any existing instance of this library otherwise  the build will fail. This method can just call original `InitializeCpuExceptionHandlers` if there is not a stack switch to setup for Stack Guard feature. The new interface is below:
 ```
     EFI_STATUS
     EFIAPI
@@ -44,41 +42,32 @@ If the `overrided TscTimerLib` is still used, the definitions in `PerformancePkg
       IN CPU_EXCEPTION_INIT_DATA            *InitData OPTIONAL
       );
 ```
+10. The `DxeIpl` is updated to set all memory blocks used for page table as read-only.     For those platforms providing their own implementation of `EFI_CPU_ARCH_PROTOCOL`,     the `SetMemoryAttributes` method must be updated to clear `CR0.WP` before changing     page attributes and re-set it afterwards.
 
-10. `DxeIpl` is updated to set all memory blocks used for page table as read-only.
-    For those platforms providing their own implementation of `EFI_CPU_ARCH_PROTOCOL`,
-    the `SetMemoryAttributes` method must be updated to clear `CR0.WP` before changing
-    page attributes and re-set it afterwards.
+11. The PEI `SectionExtraction` PPI removes the hardcode alignment adjustment in GUIDED and   Compression section. If the leaf section in GUIDED and Compression section has the     alignment requirement, it needs to obviously specify its align in FDF file.
 
-11. PEI `SectionExtraction` PPI removes the hardcode alignment adjustment in GUIDED and 
-    Compression section. If the leaf section in GUIDED and Compression section has the 
-    alignment requirement, it needs to obviously specify its align in FDF file.
+12. The New performance library and DP application depends on the `ACPI50 FPDT` table. Platform    needs to include `MdeModulePkg FirmwarePerformanceDataTablePei/FirmwarePerformanceDataTableDxe`
+`/FirmwarePerformanceDataTableSmm` drivers. And, if `PcAtChipsetPkg BaseAcpiTimerLib` is 
+used to catch the performance log in PEI phase, it needs to be changed to `PeiAcpiTimerLib`.
 
-12. New performance library and DP application depends on ACPI50 FPDT table. Platform 
-    needs to include `MdeModulePkg FirmwarePerformanceDataTablePei/FirmwarePerformanceDataTableDxe`
-    `/FirmwarePerformanceDataTableSmm` drivers. And, if `PcAtChipsetPkg BaseAcpiTimerLib` is 
-    used to catch the performance log in PEI phase, it needs to be changed to `PeiAcpiTimerLib`.
+13. The new `OpalPassword` solution removes the `OpalPasswordSmm` and adds the `OpalPasswordPei`. 
+Platforms will need to **exclude** the lines  below in their platform dsc and fdf files. 
+```
+ OpalPasswordSupportLib|SecurityPkg/Library/OpalPasswordSupportLib/OpalPasswordSupportLib.inf
+  SecurityPkg/Tcg/Opal/OpalPasswordSmm/OpalPasswordSmm.inf
+```
+The Platform will need to update as in the line below for their platform dsc and fdf files.
+```
+SecurityPkg/Tcg/Opal/OpalPasswordDxe/OpalPasswordDxe.inf
+-> SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordDxe.inf
+```
+The Platform will need to add the line below in their platform dsc and fdf files.
+`SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordPei.inf`
+The platform will also need to connect the trusted storage and console to enable the new `OpalPassword` solution. The `S3` reserved memory size (for example, `PcdS3AcpiReservedMemorySize`) will need to be enlarged as well as the new `OpalPasswordPei` will need to allocate a DMA buffer for DMA operations to unlock the OPAL device.
 
-13. New `OpalPassword` solution remove `OpalPasswordSmm` and adds `OpalPasswordPei`.<br>
-    Platform needs to exclude below lines in platform dsc and fdf. <BR>
-      `OpalPasswordSupportLib|SecurityPkg/Library/OpalPasswordSupportLib/OpalPasswordSupportLib.inf`<br>
-      `SecurityPkg/Tcg/Opal/OpalPasswordSmm/OpalPasswordSmm.inf`<br>
-    Platform needs to update below line in platform dsc and fdf.<br>
-  `    SecurityPkg/Tcg/Opal/OpalPasswordDxe/OpalPasswordDxe.inf`
-      `->`
-      `SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordDxe.inf`<br>
-    Platform needs to add below line in platform dsc and fdf.<br>
-     ` SecurityPkg/Tcg/Opal/OpalPassword/OpalPasswordPei.inf`<br>
-    And platform needs to connect trusted storage and console to enable the new `OpalPassword` solution.
-    S3 reserved memory size (for example, `PcdS3AcpiReservedMemorySize`) needs to be enlarged as 
-    new `OpalPasswordPei` needs to allocate DMA buffer for DMA operation to unlock OPAL device.
+14. A new field Translation is added to `PCI_ROOT_BRIDGE_APERTURE` structure in `MdeModulePkg/Include/Library/PciHostBridgeLib.h`. A Platform whose HOST address equals to DEVICE address needs to initialize this field to 0.
 
-14. New field Translation is added to `PCI_ROOT_BRIDGE_APERTURE` structure in `MdeModulePkg/`
-    `Include/Library/PciHostBridgeLib.h`. Platform whose HOST address equals to DEVICE address needs 
-    to initialize this field to 0.
-
-15. All `TrEE` libraries and drivers are removed. A platform should use `Tcg2` libraries and drivers.<br>
-    Left guid/header file/library/drivers are removed. They are required to be replaced by right ones.<br>
+15. All `TrEE` libraries and drivers are removed. A platform should use `Tcg2` libraries and drivers. Left guid/header file/library/drivers are removed. They are required to be replaced by right ones.
 ```
     gTrEEConfigFormSetGuid                    <== gTcg2ConfigFormSetGuid
     gEfiTrEEPhysicalPresenceGuid              <== gEfiTcg2PhysicalPresenceGuid
