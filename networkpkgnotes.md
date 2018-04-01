@@ -1,4 +1,4 @@
-# [UDK2018]( https://github.com/tianocore/tianocore.github.io/wiki/UDK2018) MdePkg  Notes
+# [UDK2018]( https://github.com/tianocore/tianocore.github.io/wiki/UDK2018) NetworkPkg  Notes
 
 1. [New Features and Changes](#new-features-and-changes)
 2. [Package Interface Changes](#package-interface-changes)
@@ -55,7 +55,7 @@
 Edk2 has duplicated ping6/ifconfig6 implementation in NetworkPkg and ShellPkg.    The usage and parameter format of these 2 versions are exactly the same. These    two commands have been added to UEFI Shell specification, so the copy under      ShellPkg\Library\UefiShellNetwork2CommandsLib\    will be actively maintained in future, and the NetworkPkg copy is deleted.
 
 
-## UEFI/PI SPECIFICATION COMPLIANCE
+## UEFI PI SPECIFICATION COMPLIANCE
 1. Add EFI_HTTP_BOOT_CALLBACK_PROTOCOL support as described in section 24.7.6 in
 UEFI 2.7 A.    The HTTP Boot driver has been updated to support the EFI HTTP Boot Callback    Protocol. The new protocol will be invoked when the HTTP Boot driver is about    to transmit or has received a packet. A default implementation of the new     protocol to display the boot file download progress in percentage format will    be installed if the platform doesn't provide one.
    
