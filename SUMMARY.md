@@ -7,4 +7,5 @@
 * [NetworkPkgNotes](networkpkgnotes.md)
 * [SecurityPkgNotes](securitypkgnotes.md)
 * [UefiCpuPkgNotes](ueficpupkgnotes.md)
+* [ShellPkgNotes](shellpkgnotes.md)
 
