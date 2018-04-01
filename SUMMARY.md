@@ -5,4 +5,5 @@
 * [MdeModulePkgNotes](mdemodulepkgnotes.md)
 * [MdePkgNotes](mdepkgnotes.md)
 * [NetworkPkgNotes](networkpkgnotes.md)
+* [SecurityPkgNotes](securitypkgnotes.md)
 
