@@ -3,10 +3,10 @@
 1. [New Features and Changes](#new-features-and-changes)
 2. [Bug Fixes](#bug-fixes)
 3. [Known Issues](#known-issues)
-4. [Notes](#notes)
-5. [Best Known Methonds](#best-known-methods)
 
-##                                               NEW FEATURES AND CHANGES
+
+##                                               NEW FEATURES AND CHANGES{#new-features-and-changes}
+
 1.  PeiCore:
  1)  Handle notification PPI from SEC.
  2)  Install SEC HOB data.
@@ -171,7 +171,7 @@
 
 
 
-##  BUG FIXES
+##  BUG FIXES {#bug-fixes}
 1.  PeiCore: Update debug message to print FV handle correctly.
 2.  DxeCore:
 
@@ -268,7 +268,7 @@
 
 29. PartitionDxe: Fix ProbeMediaStatusEx() to pass the address of a buffer in the stack instead of a NULL pointer to     ReadDisk() interface of EFI_DISK_IO_PROTOCOL.
 
-##  KNOWN ISSUES
+##  KNOWN ISSUES {#known-issues}
 1.  Current SmiHandlerProfile implementation builds profile database at SmmReadyToLock. So the profile for SMI handler  registered after SmmReadyToLock will be not recorded.
 
 2.  HII:
