@@ -71,10 +71,11 @@ The platform will also need to connect the trusted storage and console to enable
 15. All `TrEE` libraries and drivers are removed. A platform should use `Tcg2` libraries and drivers. Left guid/header file/library/drivers are removed. They are required to be replaced by right ones.
 
 <pre>
+
     gTrEEConfigFormSetGuid                    <== gTcg2ConfigFormSetGuid
     gEfiTrEEPhysicalPresenceGuid              <== gEfiTcg2PhysicalPresenceGuid
     Include/Guid/TrEEConfigHii.h              <== Include/Guid/Tcg2ConfigHii.h
-    Include/Guid/TrEEPhysicalPresenceData.h   <== Include/Guid/Tcg2PhysicalPresenceData.h
+    Include/Guid/TrEEPhysicalPresenceData.h   < = Include/Guid/Tcg2PhysicalPresenceData.h
     Include/Library/TrEEPhysicalPresenceLib.h <== Include/Library/Tcg2PhysicalPresenceLib.h
     Include/Library/TrEEPpVendorLib.h         <== Include/Library/Tcg2PpVendorLib.h
     Library/TrEEPpVendorLibNull               <== Library/Tcg2PpVendorLibNull
