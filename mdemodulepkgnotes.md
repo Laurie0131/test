@@ -8,52 +8,52 @@
 ##                                               NEW FEATURES AND CHANGES
 
 1.  **PeiCore:**
-    1)  Handle notification PPI from SEC.
-    2)  Install `SEC HOB` data.
-    3)  Support pre memory page allocation.
-    4)  Consume new PCD `PcdInitValueInTempStack` to get the init value in temp stack.
+  1)  Handle notification PPI from SEC.
+  2)  Install `SEC HOB` data.
+  3)  Support pre memory page allocation.
+  4)  Consume new PCD `PcdInitValueInTempStack` to get the init value in temp stack.
 
 2.  **PeiCore** and **DxeCore:**
-    1)  Support `FFS_ATTRIB_DATA_ALIGNMENT_2`.
-    2)  Propagate `PEI-phase` FV authentication status to DXE.
-    3)  Support `EFI_FIRMWARE_VOLUME_EXT_ENTRY_USED_SIZE_TYPE`.
+  1)  Support `FFS_ATTRIB_DATA_ALIGNMENT_2`.
+  2)  Propagate `PEI-phase` FV authentication status to DXE.
+  3)  Support `EFI_FIRMWARE_VOLUME_EXT_ENTRY_USED_SIZE_TYPE`.
 
 3.  **DxeCore:**
-    1)  Enhance `ConvertPages`: Incompatible memory types.
-    2)  Remove extra connects for UEFI Applications.
+  1)  Enhance `ConvertPages`: Incompatible memory types.
+  2)  Remove extra connects for UEFI Applications.
 
 4.  **PiSmmCore:** Install EndOfS3Resume and S3SmmInitDone protocols in registered SMI handlers. 
 
 5.  **PiSmmIpl:**
-    1)  Handle `CommSize OPTIONAL` case in `SmmCommunicationCommunicate`.
-    2)  Remove `NX` page attribute for `SMRAM`.
+  1)  Handle `CommSize OPTIONAL` case in `SmmCommunicationCommunicate`.
+  2)  Remove `NX` page attribute for `SMRAM`.
 
 6. ** DxeIplPeim:** Mark page table as read-only.
 
 7.  Update `DxeIplPeim` and `SectionExtractionPei` to remove the hard code alignment adjustment. Section data alignment should be made in the build generation.
 
 8.  Null Pointer Detection: `DxeIplPeim` and `DxeCore` are updated to support the feature.
-    1)  This feature is used to detect invalid access to `NULL` pointer and page fault exception will be triggered if such issue is detected. Due to the implementation limitation, accessing any address in page 0 (000-FFF) will be actually detected by this feature. This feature is enabled by `BIT0` and `BIT1` of        `PcdNullPointerDetectionPropertyMask` for UEFI and SMM code separately.
-    2)  For source legacy drivers which need to access legacy memory at page 0, macro `ACCESS_PAGE0_CODE` can be used to enclose those statements to avoid unnecessary page fault exception without losing their original       functionalities, if this feature needs to be enabled.
-    3)  For binary legacy drivers, legacy `OptionROM` and legacy compatible OS loader, which will normally access page 0,  `BIT7` of `PcdNullPointerDetectionPropertyMask` can be used, as last resort, to disable this feature right after       `EndOfDxe` event.
-    4)  This feature is disabled by default.
+  1)  This feature is used to detect invalid access to `NULL` pointer and page fault exception will be triggered if such issue is detected. Due to the implementation limitation, accessing any address in page 0 (000-FFF) will be actually detected by this feature. This feature is enabled by `BIT0` and `BIT1` of        `PcdNullPointerDetectionPropertyMask` for UEFI and SMM code separately.
+  2)  For source legacy drivers which need to access legacy memory at page 0, macro `ACCESS_PAGE0_CODE` can be used to enclose those statements to avoid unnecessary page fault exception without losing their original       functionalities, if this feature needs to be enabled.
+  3)  For binary legacy drivers, legacy `OptionROM` and legacy compatible OS loader, which will normally access page 0,  `BIT7` of `PcdNullPointerDetectionPropertyMask` can be used, as last resort, to disable this feature right after       `EndOfDxe` event.
+  4)  This feature is disabled by default.
   
 9.  **Heap Guard:** `DxeIplPeim, DxeCore` and `PiSmmCore` are updated to support the feature.
-    1)  Heap Guard is used to detect heap memory overflow and page fault exception will be triggered if such issue is        detected. It consists of page guard and pool guard, which can be enabled separately or simultaneously by `BIT0`         and `BIT1` of `PcdHeapGuardPropertyMask` for UEFI memory, and by `BIT2` and `BIT3` for SMM memory.
-    2)  To let Heap Guard get into work, the users still need to enable one or more allocation types of memory       (like `EfiBootServicesData`), which need to be detected, through `PcdHeapGuardPageType` and/or `PcdHeapGuardPoolType`.         These two PCDs control both UEFI and SMM memory.
-    3)  For pool memory, `BIT7` of `PcdHeapGuardPropertyMask` is designed to elaborate the detection of buffer overflow from         access growing or declining direction. It's cleared by default (growing direction).
-    4)  Due to memory consumption, performance and potential OS boot impact, this feature is not suggested to be enabled         in production BIOS.
-    5)  This feature is disabled by default.
+  1)  Heap Guard is used to detect heap memory overflow and page fault exception will be triggered if such issue is        detected. It consists of page guard and pool guard, which can be enabled separately or simultaneously by `BIT0`         and `BIT1` of `PcdHeapGuardPropertyMask` for UEFI memory, and by `BIT2` and `BIT3` for SMM memory.
+  2)  To let Heap Guard get into work, the users still need to enable one or more allocation types of memory       (like `EfiBootServicesData`), which need to be detected, through `PcdHeapGuardPageType` and/or `PcdHeapGuardPoolType`.         These two PCDs control both UEFI and SMM memory.
+  3)  For pool memory, `BIT7` of `PcdHeapGuardPropertyMask` is designed to elaborate the detection of buffer overflow from         access growing or declining direction. It's cleared by default (growing direction).
+  4)  Due to memory consumption, performance and potential OS boot impact, this feature is not suggested to be enabled         in production BIOS.
+  5)  This feature is disabled by default.
 
 10. **Stack Guard:**` DxeIplPeim, DxeCore` are updated to support the feature.
-    1)  This feature is used to detect the overflow of the whole UEFI stack memory, including the stack of BSP and all         APs. Page fault exception will be triggered if such issue is detected. It can be enabled/disabled by         `PcdCpuStackGuard`.
-    2)  This feature disabled by default.
+  1)  This feature is used to detect the overflow of the whole UEFI stack memory, including the stack of BSP and all         APs. Page fault exception will be triggered if such issue is detected. It can be enabled/disabled by         `PcdCpuStackGuard`.
+  2)  This feature disabled by default.
 
 11. Add **IOMMU** support.
-    1)  Add IOMMU PPI and protocol definitions.
-    2)  Update `PciBusDxe` to support IOMMU. When IOMMU protocol is installed, PciBus calls IOMMU to set access attribute         for the PCI device in Map/Ummap.
-    3)  Update `PciHostBridgeDxe` to support IOMMU. When IOMMU protocol is installed, `PciHostBridge` just calls IOMMU         `AllocateBuffer/FreeBuffer/Map/Unmap`.
-    4)  Update `SdBlockIoPei, EmmcBlockIoPei, UfsBlockIoPei, EhciPei, UhciPei` and `XhciPei` to support IOMMU.
+  1)  Add IOMMU PPI and protocol definitions.
+  2)  Update `PciBusDxe` to support IOMMU. When IOMMU protocol is installed, PciBus calls IOMMU to set access attribute         for the PCI device in Map/Ummap.
+  3)  Update `PciHostBridgeDxe` to support IOMMU. When IOMMU protocol is installed, `PciHostBridge` just calls IOMMU         `AllocateBuffer/FreeBuffer/Map/Unmap`.
+  4)  Update `SdBlockIoPei, EmmcBlockIoPei, UfsBlockIoPei, EhciPei, UhciPei` and `XhciPei` to support IOMMU.
     
 12. Add `EndOfS3Resume` GUID definition, after S3 SMM initialization is done and before S3 boot script is executed, the     GUID will be installed at the end of S3 resume phase as protocol in SMM environment.
 
@@ -70,9 +70,9 @@
 18. Update `RuntimeDxe` and `PeiCrc32GuidedSectionExtractLib` to consume `CalculateCrc32()` API in `BaseLib`.
 
 19. In `UefiBootManagerLib`:
-    1)  Support DNS device path description.
-    2)  Generate boot description for SD/eMMC.
-    3)  Remove the useless perf codes.
+  1)  Support DNS device path description.
+  2)  Generate boot description for SD/eMMC.
+  3)  Remove the useless perf codes.
 
 20. **MemoryTest:** Update `GenericMemoryTestDxe` and `NullMemoryTestDxe` to handle More Reliable memory type.
 
@@ -83,37 +83,36 @@
 23. `PeiDxeDebugLibReportStatusCode`: Print partially when format string is too long.
 
 24. `SerialDxe`:
-     1)  Process timeout consistently in `SerialRead`.
-     2)  Handle Timeout change more robustly in `SerialSetAttributes`.
+   1)  Process timeout consistently in `SerialRead`.
+   2)  Handle Timeout change more robustly in `SerialSetAttributes`.
 
 25. **ResetSystem**:
-    1)  Add `PlatformSpecificResetFilter` and `PlatformSpecificResetHandler` PPI and protocol definitions.
-    2)  Add `PlatformSpecificResetNotification` PPI definition.
-    3)  Update `ResetSystemRuntimeDxe` to implement `ResetNotification`, `ResetFilter` and `ResetHandler` protocols.
-    4)  Add `ResetSystemPei` to implement `Reset2, ResetNotification, ResetFilter` and `ResetHandler` PPIs.
-    5)  Add `ResetSystemLib` instances, PeiResetSystemLib calls the ResetSystem2() service in the PEI Services Table, and         `DxeResetSystemLib` calls the `ResetSystem()` service in the UEFI Runtime Services Table.
-    6)  Add `ResetUtility` library class and BASE instance. The library class that provides services to generate a GUID         specific reset, parse the GUID from a GUID specific reset, and build the `ResetData` buffer for any type of reset         that requires extra data.
-    7)  Update `PeiCore` to always attempt to use `Reset2` PPI first.
+   1)  Add `PlatformSpecificResetFilter` and `PlatformSpecificResetHandler` PPI and protocol definitions.
+   2)  Add `PlatformSpecificResetNotification` PPI definition.
+   3)  Update `ResetSystemRuntimeDxe` to implement `ResetNotification`, `ResetFilter` and `ResetHandler` protocols.
+   4)  Add `ResetSystemPei` to implement `Reset2, ResetNotification, ResetFilter` and `ResetHandler` PPIs.
+   5)  Add `ResetSystemLib` instances, PeiResetSystemLib calls the ResetSystem2() service in the PEI Services Table, and         `DxeResetSystemLib` calls the `ResetSystem()` service in the UEFI Runtime Services Table.
+   6)  Add `ResetUtility` library class and BASE instance. The library class that provides services to generate a GUID         specific reset, parse the GUID from a GUID specific reset, and build the `ResetData` buffer for any type of reset         that requires extra data.
+   7)  Update `PeiCore` to always attempt to use `Reset2` PPI first.
 
 26. **PCD:**
-    1)  Update PCD driver to support the optimized `PcdDataBase`.
-    2)  Enable Firmware to retrieve the default setting, add two PCDs `PcdSetNvStoreDefaultId` and         `PcdNvStoreDefaultValueBuffer`.
-    3)  Remove unused `PCD attribute PCD_TYPE_SKU_ENABLED`.
+   1)  Update PCD driver to support the optimized `PcdDataBase`.
+   2)  Enable Firmware to retrieve the default setting, add two PCDs `PcdSetNvStoreDefaultId` and         `PcdNvStoreDefaultValueBuffer`.
+   3)  Remove unused `PCD attribute PCD_TYPE_SKU_ENABLED`.
     
 27. **Variable DXE/SMM driver:**
-    1)  Deprecate `EFI_VARIABLE_AUTHENTICATED_WRITE_ACCESS`.
-    2)  Update `GetNextVariableName` to follow UEFI 2.7.
-    3)  Update code to also support normal format variable storage HOB when the NV variable store is auth format.
+   1)  Deprecate `EFI_VARIABLE_AUTHENTICATED_WRITE_ACCESS`.
+   2)  Update `GetNextVariableName` to follow UEFI 2.7.
+   3)  Update code to also support normal format variable storage HOB when the NV variable store is auth format.
 
-
-28.** HII:**
+28. HII:
   1)  EFI Varstore/Buffer Varstore BIT field support
-        1)  Add GUID/flags definitions for BitField support.
-        2)  Update `SetupBrowserDxe, HiiDatabaseDxe, UefiHiiLib` and `VarCheckHiiLib` to handle/check Question which is  stored in the BIT field of EFI Varstore/Bufffer Varstore.
-        3)  Add sample cases in `DriverSampleDxe` to create BIT/UNION varstore and add sample Questions to consume bit/union VarStore. 
-  2)  Update `HiiDatabaseDxe` to replace the default setting in vfr file with the one set through `DynamicHii` PCD.
-  3)  Update `DisplayEngineDxe` to add the implementation of `HiiPopup` protocol which is defined in UEFI2.7 Spec.
-  4)  Update `DriverSampleDxe` to add a sample case to consume `HiiPopup` protocol.
+      a)  Add GUID/flags definitions for BitField support.
+      b)  Update `SetupBrowserDxe, HiiDatabaseDxe, UefiHiiLib` and `VarCheckHiiLib` to handle/check Question which is  stored in the BIT field of EFI Varstore/Bufffer Varstore.
+      c)  Add sample cases in `DriverSampleDxe` to create BIT/UNION varstore and add sample Questions to consume bit/union VarStore. 
+  2) Update `HiiDatabaseDxe` to replace the default setting in vfr file with the one set through `DynamicHii` PCD.
+  3) Update `DisplayEngineDxe` to add the implementation of `HiiPopup` protocol which is defined in UEFI2.7 Spec.
+  4) Update `DriverSampleDxe` to add a sample case to consume `HiiPopup` protocol.
 
 29. **Network:**
 
