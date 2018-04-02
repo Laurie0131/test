@@ -19,16 +19,16 @@
     3)  Support `EFI_FIRMWARE_VOLUME_EXT_ENTRY_USED_SIZE_TYPE`.
 
 3.  **DxeCore:**
-    1)  Enhance `ConvertPages`: Incompatible memory types.
+    1)  Enhance "`ConvertPages: Incompatible memory types`".
     2)  Remove extra connects for UEFI Applications.
 
-4.  **PiSmmCore:** Install EndOfS3Resume and S3SmmInitDone protocols in registered SMI handlers. 
+4.  **PiSmmCore:** Install `EndOfS3Resume` and `S3SmmInitDone` protocols in registered SMI handlers. 
 
 5.  **PiSmmIpl:**
     1)  Handle `CommSize OPTIONAL` case in `SmmCommunicationCommunicate`.
     2)  Remove `NX` page attribute for `SMRAM`.
 
-6. ** DxeIplPeim:** Mark page table as read-only.
+6. **DxeIplPeim:** Mark page table as read-only.
 
 7.  Update `DxeIplPeim` and `SectionExtractionPei` to remove the hard code alignment adjustment. Section data alignment should be made in the build generation.
 
