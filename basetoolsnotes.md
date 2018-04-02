@@ -176,43 +176,50 @@ An example that will break the build:
 9.  BaseTools C source file can't be compiled in the Visual Studio x64 command prompt.
 
 ##  NOTES
-1.  Macros referenced in DSC/FDF files now requires the enclosure of "$()" to avoid ambiguity.
-2.  EFI_SPECIFICATION_VERSION and PI_SPECIFICATION_VERSION are no longer public macro definitions in autogen code.
-3.  The feature of CLM support increases the chances of two platform builds failure under one workspace. We need to
-    avoid the concurrent build of different platforms under one workspace.
-4.  The execution order prediction feature of BRG requires the new internal python tool named EOT. It requires the
-    installation of ANTRL v3.0.1 in Python home for Python runtime support. The tool parses all the source files
-    involved in the platform build and it may even take hours to complete the parse and generate the report.
-5.  The blank setting for CAPSULE_FLAGS in [Capsule] section of FDF file is not supported. If no CAPSULE_FLAGS is set,
-    CAPSULE_FLAGS need not be specified in [Capsule] section.
+1.  Macros referenced in DSC/FDF files now requires the enclosure of `"$()"` to avoid ambiguity.
+
+2.  `EFI_SPECIFICATION_VERSION` and `PI_SPECIFICATION_VERSION` are no longer public macro definitions in autogen code.
+
+3.  The feature of CLM support increases the chances of two platform builds failure under one workspace. We need to     avoid the concurrent build of different platforms under one workspace.
+
+4.  The execution order prediction feature of BRG requires the new internal python tool named EOT. It requires the     installation of ANTRL v3.0.1 in Python home for Python runtime support. The tool parses all the source files    involved in the platform build and it may even take hours to complete the parse and generate the report.
+
+5.  The blank setting for CAPSULE_FLAGS in `[Capsule]` section of FDF file is not supported. If no `CAPSULE_FLAGS` is set,     `CAPSULE_FLAGS` need not be specified in `[Capsule]` section.
+
 6.  The Global Macro is not allowed in EDK II INF except some predefined cases; see details in INF spec 1.26 chapter 2.2.6.
-7.  The expression after !if, !ifdef, !elseif cannot be empty.
+
+7.  The expression after `!if`, `!ifdef`, `!elseif` cannot be empty.
+
 8.  The section header in FDF cannot contain macros.
+
 9.  The name and value definition in define section must follow DSC spec.
+
 10. The type of a PCD defined in a DSC file should match the possible types for this PCD in the DEC file.
+
 11. For MACRO usage scope, please refer to meta-data file spec for details. Following is some general information.
-    INF - [Defines] section or any statements contain <PATH> or [BuildOptions] section
-    DEC - [Defines] section or any statements contain <PATH>
-    DSC - [Defines] section or any statements contain <PATH> or [BuildOptions] or Conditional Directive statements
-    FDF - Whole File
-12. VfrCompile tool adds data type check for Oneof and Numeric opcode. The valid data type for Oneof and Numeric question
-    are UINT8, UINT16, UINT32 and UINT64.
+```
+   INF - [Defines] section or any statements contain <PATH> or [BuildOptions] section
+   DEC - [Defines] section or any statements contain <PATH>
+   DSC - [Defines] section or any statements contain <PATH> or [BuildOptions] or Conditional Directive statements
+   FDF - Whole File
+```
+
+12. VfrCompile tool adds data type check for Oneof and Numeric opcode. The valid data type for Oneof and Numeric question    are `UINT8`,` UINT16`, `UINT32` and `UINT64`.
 
 
 ##  BEST KNOWN METHODS
-1.  When the build tools are updated, the build configuration template in $(WORKSPACE)\BaseTools\Conf\*.template may also
-    be updated, which needs to be merged with local $(WORKSPACE)\Conf\*.txt to avoid some build error.
+1.  When the build tools are updated, the build configuration template in `$(WORKSPACE)\BaseTools\Conf\*.template` may also     be updated, which needs to be merged with local `$(WORKSPACE)\Conf\*.txt` to avoid some build error.
+
 2.  To ensure the platform is clean rebuild without any previous build impact, the cached meta data information directory
-    i.e.$(WORKSPACE)\Conf\.cache can be removed.
-3.  In case of build failure due to access error of $(WORKSPACE)\Conf\.cache\build.db, the tip can be rebuilt again without
-    any concurrent build process under the same workspace.
-4.  When the different MACRO settings are used to enable the different drivers with same module GUID and driver name in
-    two build times, the incremental build will not work well. The clean build is required for the second build.
-5.  The EOT tool depends on ANTRL 3.0.1 runtime library and newer ANTRL release (e.g. 3.1.2) is not compatible with older
-    release. So it is required to download ANTLR 3.0.1 from www.antlr.org and install python runtime library to the local
-    python home.
-6.  The notification function related features are not integrated to BRG output plain text report file. As the invocation
-    of EOT (from BRG) generates Report.html under workspace directory. This HTML report file shows the details of the notification
-    functions under each module if available.
+   i.e.`$(WORKSPACE)\Conf\.cache` can be removed.
+
+3.  In case of build failure due to access error of `$(WORKSPACE)\Conf\.cache\build.db`, the tip can be rebuilt again without    any concurrent build process under the same workspace.
+
+4.  When the different MACRO settings are used to enable the different drivers with same module GUID and driver name in     two build times, the incremental build will not work well. The clean build is required for the second build.
+
+5.  The EOT tool depends on ANTRL 3.0.1 runtime library and newer ANTRL release (e.g. 3.1.2) is not compatible with older     release. So it is required to download ANTLR 3.0.1 from www.antlr.org and install python runtime library to the local     python home.
+
+6.  The notification function related features are not integrated to BRG output plain text report file. As the invocation     of EOT (from BRG) generates Report.html under workspace directory. This HTML report file shows the details of the notification     functions under each module if available.
+
 7.  The Prebuild and Postbuild entry must be a tool that can be executed.
 
