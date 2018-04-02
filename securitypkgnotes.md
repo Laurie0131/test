@@ -19,8 +19,8 @@
     6) Apply more checks in TPM1.2, TPM2.0 command lib to fix memory corruption vulnerability
 
 3. **Misc**
-    1) Remove RngTest application.
-    2) Implement VerifySignature interface in Pkcs7Verify Protocol.
+    1) Remove `RngTest` application.
+    2) Implement `VerifySignature` interface in `Pkcs7Verify` Protocol.
 
 
 ##                           PACKAGE INTERFACE CHANGES
