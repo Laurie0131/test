@@ -2,6 +2,7 @@
 
 * [Introduction](README.md)
 * [UDK2018CoreUpdateNotes](chapter1.md)
+* [BaseToolsNotes](basetoolsnotes.md)
 * [CryptoPkgNotes](cryptopkgnotes.md)
 * [IntelFrameworkModulePkgNotes](intelframeworkmodulepkgnotes.md)
 * [IntelFrameworkPkgNotes](intelframeworkpkgnotes.md)
@@ -11,9 +12,9 @@
 * [MdeModulePkgNotes](mdemodulepkgnotes.md)
 * [MdePkgNotes](mdepkgnotes.md)
 * [NetworkPkgNotes](networkpkgnotes.md)
-* [UefiCpuPkgNotes](ueficpupkgnotes.md)
 * [PcAtChipsetPkgNotes](pcatchipsetpkgnotes.md)
 * [SecurityPkgNotes](securitypkgnotes.md)
 * [ShellPkgNotes](shellpkgnotes.md)
 * [SourceLevelDebugPkgNotes](sourceleveldebugpkgnotes.md)
+* [UefiCpuPkgNotes](ueficpupkgnotes.md)
 
