@@ -15,29 +15,30 @@
       3) Change "dmpstore" to show name of known variable vendor GUID.
       4) Change "dh":<br>
            1) Show all protocol names in a single line.
-           2) Show key information in hilight color instead of blue.
-           3) Show protocol instance pointer value when "-v" is supplied.
+           2) Show key information in hi-light color instead of blue.
+           3) Show protocol instance pointer value when "`-v`" is supplied.
            4) Support protocols defined in latest UEFI/PI spec.
            5) Show more information for following protocols:
-           
-              - ImageDevicePath
-              - DevicePath
-              - LoadedImage
-              - BusSpecificDriverOverride
-              - BlockIo
-              - DebugSupport
-              - GraphicsOutput
-              - PciIo
-              - UsbIo
-              - PartitionInfo
+```
+              ImageDevicePath
+              DevicePath
+              LoadedImage
+              BusSpecificDriverOverride
+              BlockIo
+              DebugSupport
+              GraphicsOutput
+              PciIo
+              UsbIo
+              PartitionInfo
+```
 
-2.  Convert "dp" and "tftp" from NULL class library to dynamic command.
+2.  Convert "dp" and "tftp" from "NULL" class library to dynamic command.
 
-3.  Remove unnecessary TimerLib dependency from ShellPkg.dsc.
+3.  Remove unnecessary `TimerLib` dependency from `ShellPkg.dsc`.
 
-4.  Change "edit" and "hexedit" to read input through SimpleTextInEx interfaces.
+4.  Change "edit" and "hexedit" to read input through `SimpleTextInEx` interfaces.
 
-5.  Change "mm" to remove unnecessary IO address limitation (`<=` 0xFFFF).
+5.  Change "mm" to remove unnecessary IO address limitation (`<=` `0xFFFF`).
 
 
 ##                                                       BUG FIXES
@@ -48,7 +49,7 @@
 
 3.  Fix "map" to show correct block IO information when CDROM media status is changed.
 
-5.  Fix "dblk" to use the aligned buffer when calling BlockIo interfaces.
+5.  Fix "dblk" to use the aligned buffer when calling `BlockIo` interfaces.
 
 6.  Fix "mkdir" to support creating nested directories.
 
