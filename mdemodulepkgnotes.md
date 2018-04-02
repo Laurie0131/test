@@ -153,7 +153,7 @@
 
 35. **PciBus**:
 
-    1)  Install `PciEnumerationComplete` protocol after PciIo protocols are installed, instead of after hardware enumeration is completed. The change is to follow the PI spec and also benefits certain implementation that         depends on the PciIo handle in `PciEnumerationComplete` callback.
+    1)  Install `PciEnumerationComplete` protocol after PciIo protocols are installed, instead of after hardware enumeration is completed. The change is to follow the PI spec and also benefits certain implementation that         depends on the `PciIo` handle in `PciEnumerationComplete` callback.
     2)  Reserve BUS number for non-root and root hot-plug controllers. Old implementation only reserves for root    hot-plug controllers. 
     
 36. Add Translation field to `PCI_ROOT_BRIDGE_APERTURE`. Translation is used to represent the difference between device    address and host address, if they are not the same on some platforms.
@@ -166,12 +166,12 @@
 
 2.  **DxeCore**:
     1)  Avoid accessing non-owned memory in CoreValidateHandle, `CoreDisconnectControllersUsingProtocolInterface()` and         `CoreOpenProtocol()`.
-    2)  Fix double free pages on LoadImage failure path.
+    2)  Fix double free pages on `LoadImage` failure path.
     3)  Fix Interface returned by `CoreOpenProtocol`.
 
 3. ** PiSmmCore**:
     1)  Unregister each other for LegacyBoot and `ExitBootServices` SMI handlers.
-    2)  Set ForwardLink to NULL in RemoveOldEntry() to fix potential linked list assertion.
+    2)  Set ForwardLink to `NULL` in `RemoveOldEntry()` to fix potential linked list assertion.
     3)  Fix hang due to already-freed memory dereference.
 
 4.  Fix misuses of `AllocateCopyPool` in `UiApp, BootMaintenanceManagerUiLib, DeviceManageruiLib, UefiHiiLib,     FvSimpleFileSystemDxe` and `HiiDatabaseDxe`.
@@ -235,8 +235,8 @@
 
 24. **USB**:
      1)  `EhciDxe`: Call EhcFreeUrb to copy the contents of the mapped DMA buffer into the real buffer when sync interrupt         transfer completes.
-     2)  XhciPei and XhciDxe: Recover halted endpoint when BABBLE error occurs.
-     3)  XhciDxe
+     2)  `XhciPei` and `XhciDxe`: Recover halted endpoint when BABBLE error occurs.
+     3)  `XhciDxe`
     
          1)  Fix a data loss issue in interrupt transfer. The data loss doesn't impact USB keyboard/mouse functionality             but may cause BLE connection random failure.
          2)  Fix DMA buffer map and unmap inconsistency for async interrupt transfer.
