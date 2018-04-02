@@ -8,4 +8,5 @@
 * [SecurityPkgNotes](securitypkgnotes.md)
 * [UefiCpuPkgNotes](ueficpupkgnotes.md)
 * [ShellPkgNotes](shellpkgnotes.md)
+* [CryptoPkgNotes](cryptopkgnotes.md)
 
