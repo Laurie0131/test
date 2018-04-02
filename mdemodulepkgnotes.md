@@ -107,14 +107,15 @@
 
 
 28.** HII:**
+
       1)  EFI Varstore/Buffer Varstore BIT field support.
+
             1)  Add GUID/flags definitions for BitField support.
             2)  Update `SetupBrowserDxe, HiiDatabaseDxe, UefiHiiLib` and `VarCheckHiiLib` to handle/check Question which is  stored in the BIT field of EFI Varstore/Bufffer Varstore.
             3)  Add sample cases in `DriverSampleDxe` to create BIT/UNION varstore and add sample Questions to consume bit/union VarStore. 
       2)  Update `HiiDatabaseDxe` to replace the default setting in vfr file with the one set through `DynamicHii` PCD.
       3)  Update `DisplayEngineDxe` to add the implementation of `HiiPopup` protocol which is defined in UEFI2.7 Spec.
       4)  Update `DriverSampleDxe` to add a sample case to consume `HiiPopup` protocol.
-
 
 29. **Network:**
 
