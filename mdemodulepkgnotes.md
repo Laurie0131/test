@@ -130,136 +130,139 @@
     2)  `SmmCorePerformanceLib`:   
          1) Update `SmmCorePerformanceLib` to convert Perf entry to FPDT record in SMM phase.
          2) Define a new structure smm boot performance table to save the contents and size of FPDT records in SMM        phase and report the address of smm boot performance table to `FirmwarePerformanceDataTableSmm`.
-    3) DxeCorePerformanceLib:
-        1)  Update DxeCorePerformanceLib to convert Perf entry to FPDT record in DXE phase.
+    3) `DxeCorePerformanceLib`:
+        1)  Update `DxeCorePerformanceLib` to convert Perf entry to FPDT record in DXE phase.
         2)  Collect FPDT records in PEI phase through the GUID hob. 
         3)  Collect FPDT records in SMM phase through MM Communication protocol.
-        4)  Allocate boot performance table to save all FPDT records and report the address of boot performance table             to FirmwarePerformanceDataTableDxe.
-    4)  FirmwarePerformanceDataTablePei: Add FPDT records into basic boot performance table for S3 phase
-    5)  FirmwarePerformanceDataTableSmm: Update FirmwarePerformanceDataTableSmm to receive smm boot performance table address which is reported by SmmCorePerformanceLib.
-    6)  FirmwarePerformanceDataTableDxe: 
-         1)  Update FirmwarePerformanceDataTableDxe to receive boot performance table address which is reported by             DxeCorePerformanceLib.
-         2)  Update FirmwarePerformanceDataTableDxe to Hook  EFI_SW_DXE_BS_PC_READY_TO_BOOT_EVENT to install ACPI table.
-         3)  Remove the macro EXTENSION_RECORD_SIZE, since the extension size can be got through PcdExtFpdtBootRecordPadSize.
+        4)  Allocate boot performance table to save all FPDT records and report the address of boot performance table             to `FirmwarePerformanceDataTableDxe`.
+    4)  `FirmwarePerformanceDataTablePei`: Add FPDT records into basic boot performance table for S3 phase
+    5)  `FirmwarePerformanceDataTableSmm`: Update `FirmwarePerformanceDataTableSmm` to receive smm boot performance table address which is reported by `SmmCorePerformanceLib`.
+    6)  `FirmwarePerformanceDataTableDxe`: 
+         1)  Update `FirmwarePerformanceDataTableDxe` to receive boot performance table address which is reported by             `DxeCorePerformanceLib`.
+         2)  Update `FirmwarePerformanceDataTableDxe` to Hook  `EFI_SW_DXE_BS_PC_READY_TO_BOOT_EVENT` to install ACPI table.
+         3)  Remove the macro `EXTENSION_RECORD_SIZE`, since the extension size can be got through `PcdExtFpdtBootRecordPadSize`.
          4)  Remove the codes that collect boot records in SMM phase(The codes have been moved to DxeCorePerformanceLib).
         
-31. Update ReadKeyStrokeEx() in Ps2KeyboardDxe, TerminalDxe and ConSplitterDxe to always return the key state even     there is no key pressed.
+31. Update `ReadKeyStrokeEx()` in `Ps2KeyboardDxe, TerminalDxe` and `ConSplitterDxe` to always return the key state even     there is no key pressed.
 
-32. AtaAtapiPassThruDxe: Relax PHY detection timeout value from 10ms to 15ms.
+32. `AtaAtapiPassThruDxe`: Relax PHY detection timeout value from 10ms to 15ms.
 
-33. SdDxe and EmmcDxe: Produce Disk Information Protocol for SD/eMMC devices.
+33. `SdDxe` and `EmmcDxe`: Produce Disk Information Protocol for SD/eMMC devices.
 
-34. UfsPassThruDxe: Produce EFI UFS Device Config Protocol.
-35. PciBus:
+34. `UfsPassThruDxe`: Produce EFI UFS Device Config Protocol.
 
-    1)  Install PciEnumerationComplete protocol after PciIo protocols are installed, instead of after hardware enumeration is completed. The change is to follow the PI spec and also benefits certain implementation that         depends on the PciIo handle in PciEnumerationComplete callback.
+35. **PciBus**:
+
+    1)  Install `PciEnumerationComplete` protocol after PciIo protocols are installed, instead of after hardware enumeration is completed. The change is to follow the PI spec and also benefits certain implementation that         depends on the PciIo handle in `PciEnumerationComplete` callback.
     2)  Reserve BUS number for non-root and root hot-plug controllers. Old implementation only reserves for root    hot-plug controllers. 
     
-36. Add Translation field to PCI_ROOT_BRIDGE_APERTURE. Translation is used to represent the difference between device    address and host address, if they are not the same on some platforms.
+36. Add Translation field to `PCI_ROOT_BRIDGE_APERTURE`. Translation is used to represent the difference between device    address and host address, if they are not the same on some platforms.
 
 
 
 ##  BUG FIXES 
-1.  PeiCore: Update debug message to print FV handle correctly.
-2.  DxeCore:
 
-    1)  Avoid accessing non-owned memory in CoreValidateHandle, CoreDisconnectControllersUsingProtocolInterface() and         CoreOpenProtocol().
+1.  **PeiCore**: Update debug message to print FV handle correctly.
+
+2.  **DxeCore**:
+    1)  Avoid accessing non-owned memory in CoreValidateHandle, `CoreDisconnectControllersUsingProtocolInterface()` and         `CoreOpenProtocol()`.
     2)  Fix double free pages on LoadImage failure path.
-    3)  Fix Interface returned by CoreOpenProtocol.
+    3)  Fix Interface returned by `CoreOpenProtocol`.
 
-3.  PiSmmCore:
-    1)  Unregister each other for LegacyBoot and ExitBootServices SMI handlers.
+3. ** PiSmmCore**:
+    1)  Unregister each other for LegacyBoot and `ExitBootServices` SMI handlers.
     2)  Set ForwardLink to NULL in RemoveOldEntry() to fix potential linked list assertion.
     3)  Fix hang due to already-freed memory dereference.
 
-4.  Fix misuses of AllocateCopyPool in UiApp, BootMaintenanceManagerUiLib, DeviceManageruiLib, UefiHiiLib,     FvSimpleFileSystemDxe and HiiDatabaseDxe.
+4.  Fix misuses of `AllocateCopyPool` in `UiApp, BootMaintenanceManagerUiLib, DeviceManageruiLib, UefiHiiLib,     FvSimpleFileSystemDxe` and `HiiDatabaseDxe`.
 
-5.  DxePrintLibPrint2Protocol: Fix error in Precision position calculation.
+5.  `DxePrintLibPrint2Protocol`: Fix error in Precision position calculation.
 
-6.  SmmLockBox: Return updated Length for EFI_BUFFER_TOO_SMALL.
+6.  `SmmLockBox`: Return updated Length for `EFI_BUFFER_TOO_SMALL`.
 
-7.  SmmLockBoxDxeLib: Get SmmCommRegion by gEdkiiPiSmmCommunicationRegionTableGuid system configuration table for SMM     communication buffer.
-8.  (Smm)S3SaveState: Extract arguments in correct order in the functions for EFI_BOOT_SCRIPT_PCI_CONFIG2_WRITE_OPCODE and EFI_BOOT_SCRIPT_PCI_CONFIG2_READ_WRITE_OPCODE.
+7.  `SmmLockBoxDxeLib`: Get `SmmCommRegion` by `gEdkiiPiSmmCommunicationRegionTableGuid` system configuration table for SMM     communication buffer.
+8.  (Smm)`S3SaveState`: Extract arguments in correct order in the functions for `EFI_BOOT_SCRIPT_PCI_CONFIG2_WRITE_OPCODE` and `EFI_BOOT_SCRIPT_PCI_CONFIG2_READ_WRITE_OPCODE`.
 
-9.  PiSmmCoreMemoryAllocationLib: Fix a FreePool() assertion issue in  when PiSmmCore links against     PeiDxeDebugLibReportStatusCode.
+9.  `PiSmmCoreMemoryAllocationLib`: Fix a `FreePool()` assertion issue in  when `PiSmmCore` links against     `PeiDxeDebugLibReportStatusCode`.
 
-10. UefiBootManagerLib:
-      1)  Remove unnecessary assertion in BmCharToUnit to avoid system hang.
-      2)  Remove assertion when "BootOptionSupport" variable doesn't exist.
-      3)  Remove superfluous TimerLib dependency.
+10. `UefiBootManagerLib`:
+      1)  Remove unnecessary assertion in `BmCharToUnit` to avoid system hang.
+      2)  Remove assertion when "`BootOptionSupport`" variable doesn't exist.
+      3)  Remove superfluous `TimerLib` dependency.
 
-11. DxeCapsuleLibFmp:
+11. `DxeCapsuleLibFmp`:
     1)  Verify nested capsule with FMP. The current logic that uses the ESRT Table does not work because capsules are         processed before the ESRT Table is published at the Ready To Boot event.
     2)  Add more check for the UX capsule.
 
-12. CapsulePei: Sort and merge memory resource entries to handle the case that the memory resource HOBs are reported     differently between BOOT_ON_FLASH_UPDATE boot mode and normal boot mode.
+12. `CapsulePei`: Sort and merge memory resource entries to handle the case that the memory resource HOBs are reported     differently between `BOOT_ON_FLASH_UPDATE` boot mode and normal boot mode.
 
-13. FrameBufferBltLib:
+13. `FrameBufferBltLib`:
       1)  Fix copying of unaligned memory.
-      2)  Fix a bug causing display corrupted by using PixelsPerScanLine when calculating the line width.
+      2)  Fix a bug causing display corrupted by using `PixelsPerScanLine` when calculating the line width.
 
-14. SerialDxe:
+14. `SerialDxe`:
       1)  Fix not able to change serial attributes.
-      2)  Do not fail reset when SetAttributes is not supported.
+      2)  Do not fail reset when `SetAttributes` is not supported.
 
 15. Variable DXE/SMM driver:
       1)  Delete and lock OS-created MOR variable.
       2)  Delete and lock MOR in the absence of SMM.
 
-16. HII:
-     1)  SetupBrowserDxe: Update API IsResetRequired to cache all the reset signals which are triggered by UI         configuration changes. 
-     2)  DisplayEngineDxe: Fix a incorrect display issue that exposed by a corner use case.      Use Case: In one page, some new menus may be dynamically inserted between highlight menu and top of         screen menu when some question are refreshed. Incorrect display will appear if the new added menus        cause the highlight menu and previous top of screen menu can't be shown in one page.
-     3)  UefiHiiLib: Fix a bug that check the string length incorrectly for String Opcode.
-     4)  BootManagerUiLib: Check reset requirement before exiting UiApp, if reset is required, the platform will be reset.
-     5)  BootMaintenanceManagerUiLib: Check reset requirement before exiting UiApp, if reset is required, the platform        will be reset.
+16. **HII**:
+     1)  `SetupBrowserDxe`: Update API `IsResetRequired` to cache all the reset signals which are triggered by UI         configuration changes. 
+     2)  `DisplayEngineDxe`: Fix a incorrect display issue that exposed by a corner use case.      Use Case: In one page, some new menus may be dynamically inserted between highlight menu and top of         screen menu when some question are refreshed. Incorrect display will appear if the new added menus        cause the highlight menu and previous top of screen menu can't be shown in one page.
+     3)  `UefiHiiLib`: Fix a bug that check the string length incorrectly for String Opcode.
+     4)  `BootManagerUiLib`: Check reset requirement before exiting UiApp, if reset is required, the platform will be reset.
+     5)  `BootMaintenanceManagerUiLib`: Check reset requirement before exiting UiApp, if reset is required, the platform        will be reset.
 
-17. Network:
-     1)  Fix a bug in IP4 driver that TxToken is incorrect removed if error happens in transmit.
+17. **Network**:
+     1)  Fix a bug in IP4 driver that `TxToken` is incorrect removed if error happens in transmit.
      2)  Fix a bug in PXE driver that user selected options are ignored in PXE BootMenu from DHCP option 43.
-     3)  Fix a bug in IP4 driver that Ip4IpSecProcessPacket() is always called to locate IpSec protocol even the IpSec        protocol has not been installed.
-     4)  Fix a bug in DxeNetLib NetbufTrim() function that the NetBuf TotalSize is not checked with 0 before the trim        operation.
+     3)  Fix a bug in IP4 driver that `Ip4IpSecProcessPacket()` is always called to locate IpSec protocol even the IpSec        protocol has not been installed.
+     4)  Fix a bug in `DxeNetLib NetbufTrim()` function that the `NetBuf TotalSize` is not checked with 0 before the trim        operation.
 
-18. TerminalDxe: Fix PCANSI mapping for TRIANGLE and ARROW.
+18. `TerminalDxe`: Fix `PCANSI` mapping for `TRIANGLE` and `ARROW`.
 
-19. AtaAtapiPassThru: Unmap DMA buffers after disabling BM DMA.
+19. `AtaAtapiPassThru`: Unmap DMA buffers after disabling BM DMA.
 
-20. ScsiBusDxe: EFI SCSI I/O Protocol should not be produced on nonexistent LUNs.
+20. `ScsiBusDxe`: EFI SCSI I/O Protocol should not be produced on nonexistent LUNs.
 
-21. ScsiDiskDxe: EFI_NO_MEDIA should be returned instead of EFI_MEDIA_CHANGED when media is removed from device.
+21. `ScsiDiskDxe`: `EFI_NO_MEDIA` should be returned instead of `EFI_MEDIA_CHANGED` when media is removed from device.
 
-22. EmmcDxe: Fix a bug that extra data may be erased by EFI_ERASE_BLOCK_PROTOCOL.EraseBlocks().
+22. `EmmcDxe`: Fix a bug that extra data may be erased by `EFI_ERASE_BLOCK_PROTOCOL.EraseBlocks()`.
 
-23. UfsPassThruDxe and UfsBlockIoPei: Set 'DATA SEGMENT LENGTH' field of the UPIU to the number of descriptor bytes to     write.
+23. `UfsPassThruDxe` and `UfsBlockIoPei`: Set '`DATA SEGMENT LENGTH`' field of the `UPIU` to the number of descriptor bytes to     write.
 
-24. USB:
-     1)  EhciDxe: Call EhcFreeUrb to copy the contents of the mapped DMA buffer into the real buffer when sync interrupt         transfer completes.
+24. **USB**:
+     1)  `EhciDxe`: Call EhcFreeUrb to copy the contents of the mapped DMA buffer into the real buffer when sync interrupt         transfer completes.
      2)  XhciPei and XhciDxe: Recover halted endpoint when BABBLE error occurs.
      3)  XhciDxe
     
          1)  Fix a data loss issue in interrupt transfer. The data loss doesn't impact USB keyboard/mouse functionality             but may cause BLE connection random failure.
          2)  Fix DMA buffer map and unmap inconsistency for async interrupt transfer.
-     4)  UsbMassStorageDxe: Fix device compatibility issues so that more USB floppies and USB keys can be supported.
+     4)  `UsbMassStorageDxe`: Fix device compatibility issues so that more USB floppies and USB keys can be supported.
     
-25. NonDiscoverablePciDeviceDxe: Fix memory override bug in PciIoPciRead interface.
+25. `NonDiscoverablePciDeviceDxe`: Fix memory override bug in `PciIoPciRead` interface.
 
-26. NvmExpressDxe:
+26. `NvmExpressDxe`:
      1)  Abort the request by resetting the NVMe controller when a timeout occurs for a blocking PassThru request.
      2)  Notify the NVMe controller when system reset happens.
-     3)  Fix error status override within NvmExpressPassThru().
+     3)  Fix error status override within `NvmExpressPassThru()`.
      4)  Fix data buffer not mapped for NVMe Write command.
 
-27. SdMmcPciHcDxe: Call SdMmcFreeTrb() to complete a synchronous operation.
+27. `SdMmcPciHcDxe`: Call `SdMmcFreeTrb()` to complete a synchronous operation.
 
-28. PciBus: Fix the bug that EfiBusSpecificDriverOverride protocol is not produced for devices containing option rom.
+28. **PciBus**: Fix the bug that `EfiBusSpecificDriverOverride` protocol is not produced for devices containing option rom.
 
-29. PartitionDxe: Fix ProbeMediaStatusEx() to pass the address of a buffer in the stack instead of a NULL pointer to     ReadDisk() interface of EFI_DISK_IO_PROTOCOL.
+29. `PartitionDxe`: Fix `ProbeMediaStatusEx()` to pass the address of a buffer in the stack instead of a NULL pointer to    ` ReadDisk()` interface of `EFI_DISK_IO_PROTOCOL`.
 
 ##  KNOWN ISSUES 
-1.  Current SmiHandlerProfile implementation builds profile database at SmmReadyToLock. So the profile for SMI handler  registered after SmmReadyToLock will be not recorded.
 
-2.  HII:
-    1)  EFI_IFR_IMAGE, EFI_IFR_ANIMATION, EFI_IFR_VARSTORE_DEVICE opcodes are not supported.
-    2)  Nested Suppressif/DisableIf/GrayoutIf condition for single statement is not supported.
+1.  Current `SmiHandlerProfile` implementation builds profile database at `SmmReadyToLock`. So the profile for SMI handler  registered after `SmmReadyToLock` will be not recorded.
+
+2.  **HII**:
+    1)  `EFI_IFR_IMAGE, EFI_IFR_ANIMATION`, `EFI_IFR_VARSTORE_DEVICE` opcodes are not supported.
+    2)  Nested `Suppressif/DisableIf/GrayoutIf` condition for single statement is not supported.
 
 3.  MNP driver is updated to recycle the TX buffer from SNP asynchronously. The UNDI/SNP implementation must follow     UEFI 2.6 Appendix E.4.16 to return the recycled transmitted buffer address in UNDI GetStatus command to make it work,     otherwise an incorrect recycled buffer address will cause a DEBUG version MNP driver ASSERT.
 
