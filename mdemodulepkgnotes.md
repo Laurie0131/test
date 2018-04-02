@@ -106,7 +106,7 @@
      3)  Update code to also support normal format variable storage HOB when the NV variable store is auth format.
 
 28. HII:
-    1)  EFI Varstore/Buffer Varstore BIT field support
+    1) EFI Varstore/Buffer Varstore BIT field support
           a)  Add GUID/flags definitions for BitField support.
           b)  Update `SetupBrowserDxe, HiiDatabaseDxe, UefiHiiLib` and `VarCheckHiiLib` to handle/check Question which is  stored in the BIT field of EFI Varstore/Bufffer Varstore.
           c)  Add sample cases in `DriverSampleDxe` to create BIT/UNION varstore and add sample Questions to consume bit/union VarStore. 
