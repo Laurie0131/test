@@ -128,26 +128,29 @@ An example that will break the build:
 </pre>    
 2.  If you do not specify build target information both in command line and Conf\target.txt file, build tool will exit build
     immediately.
-3.  PCD used in FDF conditional directive statement without SET statement define this PCD in FDF file will cause build break.
-    An example as following:<br>
-    In DEC file:
+3.  PCD used in FDF conditional directive statement without SET statement define this PCD in FDF file will cause build break.     An example as following:<br>
+
+  In DEC file:
 ```
     [PcdsFixedAtBuild]
       gEfiPcdname.Pcdtoken|0x0|UINT32|0x11112222
 ```
-    IN DSC file:
+
+  IN DSC file:
 ```
     [PcdsFixedAtBuild]
       gEfiPcdname.Pcdtoken|0x0
 ```
-    IN FDF file:
+
+  IN FDF file:
 ```
     [FD.NT32]
     !if gEfiPcdname.Pcdtoken == 0x00000000
       XXXXXXXXXXX
     !endif
 ```
-    Another Example is:
+
+  Another Example is:
 ```
     [FD.Nt32]
       BaseAddress   = 0x0|gEfiNt32PkgTokenSpaceGuid.PcdWinNtFdBaseAddress
