@@ -12,5 +12,10 @@
 * [MdePkgNotes](mdepkgnotes.md)
 * [NetworkPkgNotes](networkpkgnotes.md)
 * [UefiCpuPkgNotes](ueficpupkgnotes.md)
+* [PcAtChipsetPkgNotes](pcatchipsetpkgnotes.md)
+* [SecurityPkgNotes](securitypkgnotes.md)
+* [ShellPkgNotes](shellpkgnotes.md)
+
+
 
 
