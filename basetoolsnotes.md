@@ -130,19 +130,28 @@ An example that will break the build:
     immediately.
 3.  PCD used in FDF conditional directive statement without SET statement define this PCD in FDF file will cause build break.
     An example as following:
-<pre>
+
     In DEC file:
+<pre>
     [PcdsFixedAtBuild]
       gEfiPcdname.Pcdtoken|0x0|UINT32|0x11112222
+</pre>
+
     IN DSC file:
+<pre>
     [PcdsFixedAtBuild]
       gEfiPcdname.Pcdtoken|0x0
+</pre>
     IN FDF file:
+<pre>
     [FD.NT32]
     !if gEfiPcdname.Pcdtoken == 0x00000000
       XXXXXXXXXXX
     !endif
+</pre>
+    
     Another Example is:
+<pre>
     [FD.Nt32]
       BaseAddress   = 0x0|gEfiNt32PkgTokenSpaceGuid.PcdWinNtFdBaseAddress
       !if gEfiNt32PkgTokenSpaceGuid.PcdWinNtFdBaseAddress
